@@ -1,0 +1,110 @@
+🛡️ Wazuh Installation & File Integrity Monitoring (FIM) – Blue Team Task Report
+1️⃣ Objective
+
+The goal of this task was to deploy Wazuh on a Windows endpoint and configure File Integrity Monitoring (FIM) to track real-time changes in critical system files and directories.
+
+This setup enables early detection of unauthorized modifications, file tampering, or suspicious activity, providing a robust Blue Team defense layer for system security monitoring.
+
+2️⃣ Tools Used
+
+Wazuh Agent (Windows) – Endpoint monitoring agent
+
+Wazuh Manager – Centralized log and alert server
+
+Windows 10/11 OS – Test environment
+
+Notepad/PowerShell – Configuration edits and commands
+
+Screenshot Tools – Documentation and evidence capture
+
+3️⃣ Installation Steps
+
+Downloaded Wazuh Agent MSI installer from the official site.
+
+Ran installer as Administrator, following installation wizard prompts.
+
+Configured agent to communicate with the Wazuh Manager (manager IP added in config).
+
+Started the agent service:
+
+net start WazuhAgent
+
+
+Verified agent-manager connection:
+
+agent_control.exe -u
+
+4️⃣ FIM Configuration
+
+Opened ossec.conf located at:
+C:\Program Files (x86)\ossec-agent\ossec.conf
+
+Configured <syscheck> section to monitor critical directories:
+
+C:\CriticalFolder
+
+C:\Windows\System32
+
+Enabled monitoring options:
+
+check_all="yes" – Monitor all changes (hash, permissions, timestamps)
+
+alert_new_files="yes" – Notify on new file creation
+
+alert_perm="yes" – Notify on permission changes
+
+Excluded temporary/log files to reduce false positives:
+
+*.tmp, *.log
+
+Saved configuration and restarted agent:
+
+net stop WazuhAgent
+net start WazuhAgent
+
+5️⃣ Testing & Validation
+
+Performed file operations in monitored directories:
+
+Created, modified, and deleted test files
+
+Verified that alerts were generated in logs:
+
+C:\Program Files (x86)\ossec-agent\logs\ossec.log
+
+
+Captured screenshots of alerts for documentation (stored in Screenshots/)
+
+✅ All monitored events were correctly detected and logged.
+
+6️⃣ Observations
+
+FIM successfully captured all file changes in real-time.
+
+Alerts included:
+
+File creation
+
+File modification
+
+File deletion
+
+Permission changes
+
+Exclusion rules effectively minimized false positives from temporary or log files.
+
+Demonstrates how endpoint monitoring provides continuous visibility into system integrity.
+
+7️⃣ Conclusion
+
+The Wazuh installation and FIM configuration were successfully completed. This setup:
+
+Provides real-time monitoring of critical files
+
+Enables early detection of potential system compromise
+
+Illustrates a Blue Team security workflow for maintaining endpoint integrity
+
+Can be expanded to include alert automation, reporting, and centralized management
+
+✅ This task forms a solid foundation for proactive threat detection and incident response in Windows environments.
